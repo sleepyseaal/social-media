@@ -17,6 +17,7 @@ model User {
   followers Follow[]  @relation("followedBy")
   following Follow[]  @relation("follows")
   comments  Comment[]
+  likes     Like[]
   createdAt DateTime  @default(now())
 }
 
@@ -27,6 +28,7 @@ model Post {
   author    User      @relation(fields: [authorId], references: [id])
   authorId  String
   comments  Comment[]
+  likes     Like[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -50,4 +52,12 @@ model Follow {
   following   User   @relation("follows", fields: [followingID], references: [id])
 
   @@unique([followerID, followingID])
+}
+
+model Like {
+  id       String @id @default(cuid())
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+  post     Post   @relation(fields: [postId], references: [id])
+  postId   String
 }
