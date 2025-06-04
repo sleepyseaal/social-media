@@ -1,0 +1,34 @@
+{
+  "name": "social-media",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "cross-env NODE_ENV=test jest --watch",
+    "dev": "cross-env NODE_ENV=development nodemon server.js",
+    "migrate:test": "cross-env NODE_ENV=test prisma migrate deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sleepyseaal/social-media.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sleepyseaal/social-media/issues"
+  },
+  "homepage": "https://github.com/sleepyseaal/social-media#readme",
+  "description": "",
+  "dependencies": {
+    "@prisma/client": "^6.9.0",
+    "bcrypt": "^6.0.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "^6.9.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.5.0",
+    "supertest": "^7.1.1"
+  }
+}
