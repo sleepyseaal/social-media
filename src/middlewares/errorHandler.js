@@ -11,9 +11,16 @@ module.exports = (err, req, res, next) => {
       : err.message
     : err.message;
 
-  res.status(statusCode).json({
+  const response = {
     success: false,
     code,
+    statusCode,
     message,
-  });
+  };
+
+  if (err.errors) {
+    response.errors = err.errors;
+  }
+
+  res.status(statusCode).json(response);
 };
