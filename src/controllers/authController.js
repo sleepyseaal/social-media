@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 
 async function signUp(req, res, next) {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, userName } = req.body;
 
     const emailExists = await prisma.User.findUnique({ where: { email } });
 
@@ -20,13 +20,14 @@ async function signUp(req, res, next) {
         name,
         email,
         password: hashedPassword,
+        username: userName,
       },
     });
 
     res.status(201).json({
       success: true,
-      user: { id: user.id, name: user.name, email: user.email },
       message: "User created successfully",
+      data: { id: user.id, name, email, userName },
     });
   } catch (err) {
     return next(err);
