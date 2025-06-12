@@ -8,17 +8,18 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  email     String    @unique
-  password  String
-  username  String    @unique
-  name      String
-  posts     Post[]
-  followers Follow[]  @relation("followedBy")
-  following Follow[]  @relation("follows")
-  comments  Comment[]
-  likes     Like[]
-  createdAt DateTime  @default(now())
+  id           String         @id @default(uuid())
+  email        String         @unique
+  password     String
+  username     String         @unique
+  name         String
+  posts        Post[]
+  followers    Follow[]       @relation("followedBy")
+  following    Follow[]       @relation("follows")
+  comments     Comment[]
+  likes        Like[]
+  loginHistory loginHistory[] @relation("UserLoginHistory")
+  createdAt    DateTime       @default(now())
 }
 
 model Post {
@@ -60,4 +61,16 @@ model Like {
   authorId String
   post     Post   @relation(fields: [postId], references: [id])
   postId   String
+}
+
+model loginHistory {
+  id        String   @id @default(uuid())
+  userId    String
+  browser   String?
+  os        String?
+  device    String?
+  ip        String?
+  location  String?
+  createdAt DateTime @default(now())
+  user      User     @relation("UserLoginHistory", fields: [userId], references: [id])
 }

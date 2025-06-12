@@ -1,6 +1,6 @@
 const { param } = require("express-validator");
 
-const getUserValidator = [
+const userValidator = [
   param("userName")
     .trim()
     .notEmpty()
@@ -11,4 +11,4 @@ const getUserValidator = [
     .withMessage("Username can only contain letters, numbers, and underscores"),
 ];
 
-module.exports = { getUserValidator };
+module.exports = { userValidator };

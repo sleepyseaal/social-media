@@ -1,7 +1,8 @@
 const AppError = require("../utils/AppError");
 const jwt = require("jsonwebtoken");
+const prisma = require("../config/prisma");
 
-function verifyToken(req, res, next) {
+function logInHandler(req, res, next) {
   const authHeader = req.headers["authorization"];
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return next(
@@ -14,7 +15,7 @@ function verifyToken(req, res, next) {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
-    next();
+    return next();
   } catch (err) {
     if (
       err.name === "TokenExpiredError" ||
@@ -30,4 +31,4 @@ function verifyToken(req, res, next) {
   }
 }
 
-module.exports = verifyToken;
+module.exports = { logInHandler };

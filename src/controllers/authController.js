@@ -1,7 +1,8 @@
-const prisma = require("../../prisma/config");
+const prisma = require("../config/prisma");
 const bcrypt = require("bcrypt");
 const AppError = require("../utils/AppError");
 const jwt = require("jsonwebtoken");
+const UAparser = require("ua-parser-js");
 
 async function signUp(req, res, next) {
   try {
@@ -36,18 +37,10 @@ async function signUp(req, res, next) {
 
 async function logIn(req, res, next) {
   try {
-    const { email, password } = req.body;
+    const { id, name, email, password, userName } = req.body;
 
     const user = await prisma.User.findUnique({
-      where: {
-        email,
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        password: true,
-      },
+      where: { email },
     });
 
     if (!user) {
@@ -68,9 +61,33 @@ async function logIn(req, res, next) {
       expiresIn: "1h",
     });
 
+    const parser = new UAparser(req.headers["user-agent"]);
+    const UAResult = parser.getResult();
+
+    const ip = req.ip;
+    const browser = UAResult.browser.name || "unknown";
+    const os = UAResult.os.name || "unknown";
+    const deviceType = UAResult.device.type || "desktop";
+    const deviceModel = UAResult.device.model
+      ? ` (${UAResult.device.model})`
+      : "";
+
+    const device = deviceType + deviceModel;
+
+    await prisma.loginHistory.create({
+      data: {
+        userId: user.id,
+        browser,
+        os,
+        device,
+        ip,
+      },
+    });
+
     res.json({
       message: "User logged in successfully",
-      token,
+      token: token,
+      data: { id, name, email, userName },
     });
   } catch (err) {
     return next(err);
